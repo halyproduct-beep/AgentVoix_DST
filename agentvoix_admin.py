@@ -38,7 +38,7 @@ st.set_page_config(
 # ════════════════════════════════════════════════════════════════
 # CONSTANTES
 # ════════════════════════════════════════════════════════════════
-FICHIER_REGISTRE  = "Requetes_Telephoniques_GMAO.xlsx"
+FICHIER_REGISTRE  = "Requetes_Téléphoniques_GMAO.xlsx"
 FICHIER_LOCAUX    = "locaux_HMR.xls"
 FICHIER_TACHES    = "Tâches_standards_CEMTL.xlsx"
 FICHIER_INTERAL   = "Écran_web_V2__Intéral_.xlsx"
@@ -111,7 +111,7 @@ USERS_DEFAUT = {
 }
 
 PAGES_PAR_ROLE = {
-    "admin":         ["🏠 Accueil","📋 Requêtes","📞 Simulation","📊 Statistiques","🗂️ Documents","🤖 Agent IA","🔄 Workflow n8n","⚙️ Configuration","👥 Utilisateurs"],
+    "admin":         ["🏠 Accueil","📋 Requêtes","📞 Simulation","📊 Statistiques","🗂️ Documents","🤖 Agent IA","🎙️ ElevenLabs","🔄 Workflow n8n","⚙️ Configuration","👥 Utilisateurs"],
     "coordonnateur": ["🏠 Accueil","📋 Requêtes","📊 Statistiques","🗂️ Documents"],
     "technicien":    ["🏠 Accueil","📋 Requêtes"],
 }
@@ -123,72 +123,88 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
 
-html, body, [class*="css"] { font-family: 'IBM Plex Sans', sans-serif; }
+html, body, [class*="css"] { font-family: 'IBM Plex Sans', sans-serif; background:#F2F5F9; }
 
 .top-bar {
-    background: linear-gradient(135deg, #0D2B55 0%, #1a4080 100%);
-    color: white; padding: 0.9rem 1.4rem; border-radius: 10px;
-    margin-bottom: 1rem; display: flex;
+    background: linear-gradient(135deg, #003A70 0%, #005FAD 60%, #00A1DE 100%);
+    color: white; padding: 1rem 1.6rem; border-radius: 12px;
+    margin-bottom: 1.2rem; display: flex;
     align-items: center; justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0,58,112,0.25);
+    position: relative; overflow: hidden;
+}
+.top-bar::after {
+    content: \'\'; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #EC1C24 0%, #F7941D 25%, #8DC63F 50%, #00A1DE 75%, #003A70 100%);
 }
 .top-bar h1 { font-size: 1.1rem; font-weight: 600; margin: 0; }
-.top-bar .sub { font-size: 0.7rem; opacity: 0.6; margin-top: 1px; }
-.top-bar .right { font-family: 'IBM Plex Mono',monospace; font-size: 0.75rem; opacity: 0.75; text-align:right; }
+.top-bar .sub { font-size: 0.7rem; opacity: 0.7; margin-top: 2px; }
+.top-bar .right { font-family: \'IBM Plex Mono\',monospace; font-size: 0.75rem; opacity: 0.8; text-align:right; }
 
-.kpi { background: white; border: 1px solid #e8edf3; border-radius: 10px;
-    padding: 0.9rem 1rem; text-align: center; }
-.kpi-n { font-size: 1.9rem; font-weight: 600; line-height: 1.1; }
-.kpi-l { font-size: 0.65rem; color: #8a9ab0; text-transform: uppercase;
-    letter-spacing: 0.07em; margin-top: 3px; }
+.kpi { background: white; border: 1px solid #DDE3EC; border-radius: 12px;
+    padding: 0.9rem 1rem; text-align: center;
+    border-top: 3px solid #00A1DE;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.kpi-n { font-size: 1.9rem; font-weight: 600; line-height: 1.1; color: #003A70; }
+.kpi-l { font-size: 0.65rem; color: #6B7A8D; text-transform: uppercase;
+    letter-spacing: 0.07em; margin-top: 4px; }
 
-.req { background: white; border: 1px solid #e8edf3; border-radius: 9px;
-    padding: 0.85rem 1rem; margin-bottom: 0.55rem; }
-.req:hover { box-shadow: 0 3px 12px rgba(0,0,0,0.07); }
-.req-urgent { border-left: 4px solid #C62828; }
+.req { background: white; border: 1px solid #DDE3EC; border-radius: 10px;
+    padding: 0.85rem 1rem; margin-bottom: 0.55rem;
+    transition: box-shadow 0.15s, transform 0.1s; }
+.req:hover { box-shadow: 0 4px 16px rgba(0,58,112,0.1); transform: translateY(-1px); }
+.req-urgent { border-left: 4px solid #EC1C24; }
 .req-done { opacity: 0.55; }
-.req-no { font-family:'IBM Plex Mono',monospace; font-size:0.73rem; font-weight:600; color:#0D2B55; }
-.req-desc { font-size:0.8rem; background:#f4f8fc; border-left:3px solid #006D77;
-    border-radius:0 5px 5px 0; padding:5px 9px; margin-top:5px; font-style:italic; color:#3a5068; }
+.req-no { font-family:\'IBM Plex Mono\',monospace; font-size:0.73rem; font-weight:600; color:#003A70; }
+.req-desc { font-size:0.8rem; background:#EBF6FB; border-left:3px solid #00A1DE;
+    border-radius:0 6px 6px 0; padding:5px 9px; margin-top:5px; font-style:italic; color:#2A4A5E; }
 
-.badge { display:inline-block; padding:2px 8px; border-radius:20px;
+.badge { display:inline-block; padding:2px 9px; border-radius:20px;
     font-size:0.67rem; font-weight:600; margin-right:3px; }
 
-.msg-agent { background:#EDF6F9; border-left:3px solid #006D77; border-radius:0 10px 10px 10px;
+.msg-agent { background:#EBF6FB; border-left:3px solid #00A1DE; border-radius:0 10px 10px 10px;
     padding:9px 13px; margin:5px 0; max-width:78%; font-size:0.86rem; }
-.msg-user { background:#0D2B55; color:white; border-radius:10px 0 10px 10px;
+.msg-user { background:#003A70; color:white; border-radius:10px 0 10px 10px;
     padding:9px 13px; margin:5px 0 5px auto; max-width:68%; font-size:0.86rem; }
-.msg-sys { background:#FFF9E6; border:1px solid #FFD54F; border-radius:7px;
+.msg-sys { background:#FFF8E1; border:1px solid #FFD54F; border-radius:7px;
     padding:7px 11px; margin:3px 0; font-size:0.75rem; color:#795548; }
 
-.section-title { font-size:1rem; font-weight:600; color:#0D2B55;
-    border-bottom:2px solid #006D77; padding-bottom:6px; margin-bottom:12px; }
+.section-title { font-size:1rem; font-weight:600; color:#003A70;
+    border-bottom:2px solid #00A1DE; padding-bottom:6px; margin-bottom:14px; }
 
-.status-dot { display:inline-block; width:8px; height:8px;
-    border-radius:50%; margin-right:5px; }
-
-[data-testid="stSidebar"] { background:#0D2B55; }
+[data-testid="stSidebar"] { background:#2C2F33 !important; border-right:1px solid #1a1d20; }
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] span,
-[data-testid="stSidebar"] div { color:rgba(255,255,255,0.85) !important; }
+[data-testid="stSidebar"] div { color:rgba(255,255,255,0.88) !important; }
+[data-testid="stSidebar"] button {
+    background: rgba(0,161,222,0.15) !important;
+    border: 1px solid rgba(0,161,222,0.3) !important;
+    color: white !important; border-radius: 8px !important;
+}
+[data-testid="stSidebar"] button:hover { background: rgba(0,161,222,0.3) !important; }
 
-.block-container { padding-top:0.7rem; }
-#MainMenu, footer { visibility:hidden; }
-hr { border-color:#edf0f5; margin:0.7rem 0; }
+.config-card { background:white; border:1px solid #DDE3EC; border-radius:9px;
+    padding:1rem; margin-bottom:0.6rem; border-left:3px solid #00A1DE; }
+.config-title { font-size:0.88rem; font-weight:600; color:#003A70; margin-bottom:6px; }
 
-.login-box { max-width:380px; margin:4rem auto; background:white;
-    border:1px solid #e8edf3; border-radius:14px; padding:2rem; }
-.login-title { font-size:1.3rem; font-weight:600; color:#0D2B55;
-    text-align:center; margin-bottom:0.3rem; }
-.login-sub { font-size:0.78rem; color:#8a9ab0; text-align:center; margin-bottom:1.5rem; }
-
-.config-card { background:white; border:1px solid #e8edf3; border-radius:9px;
-    padding:1rem; margin-bottom:0.6rem; }
-.config-title { font-size:0.88rem; font-weight:600; color:#0D2B55; margin-bottom:6px; }
-
-.workflow-node { background:white; border:1px solid #e8edf3; border-radius:8px;
+.workflow-node { background:white; border:1px solid #DDE3EC; border-radius:8px;
     padding:0.7rem 0.9rem; margin-bottom:0.4rem; display:flex;
     align-items:center; gap:10px; }
+.workflow-node:hover { box-shadow: 0 2px 8px rgba(0,58,112,0.08); }
+
+.block-container { padding-top:0.7rem; }
+.stApp { background: #F2F5F9 !important; }
+#MainMenu, footer { visibility:hidden; }
+hr { border-color:#DDE3EC; margin:0.7rem 0; }
+
+.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #003A70, #00A1DE) !important;
+    border: none !important; border-radius: 8px !important; font-weight: 500 !important;
+}
+.demo-box { margin-top:1.5rem; background:#EBF6FB; border-radius:8px;
+    padding:0.8rem 1rem; font-size:0.72rem; color:#2A4A5E;
+    line-height:1.8; border-left:3px solid #00A1DE; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -357,26 +373,117 @@ def init_auth():
         st.session_state.nom       = None
 
 def page_login():
+    # Logo CIUSSS en SVG + design professionnel pleine page
     st.markdown("""
-    <div style='display:flex;align-items:center;justify-content:center;min-height:70vh'>
-    """, unsafe_allow_html=True)
+    <style>
+    .stApp { background: #f0f4f8; }
+    .login-page {
+        display: flex; min-height: 100vh;
+        align-items: center; justify-content: center;
+        padding: 2rem;
+    }
+    .login-wrapper {
+        display: flex; width: 100%; max-width: 900px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        border-radius: 16px; overflow: hidden;
+    }
+    .login-left {
+        flex: 1; background: linear-gradient(145deg, #003A70 0%, #0066B3 50%, #00A1DE 100%);
+        padding: 3rem 2.5rem; display: flex; flex-direction: column;
+        justify-content: space-between; min-height: 520px;
+    }
+    .login-right {
+        flex: 1; background: white;
+        padding: 3rem 2.5rem; display: flex;
+        flex-direction: column; justify-content: center;
+    }
+    .ciusss-logo-text {
+        font-size: 1.4rem; font-weight: 700; color: white;
+        line-height: 1.3; margin-bottom: 0.5rem;
+    }
+    .ciusss-sub {
+        font-size: 0.78rem; color: rgba(255,255,255,0.75);
+        line-height: 1.5;
+    }
+    .login-tagline {
+        font-size: 0.85rem; color: rgba(255,255,255,0.9);
+        line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.2);
+        padding-top: 1.5rem; margin-top: 1.5rem;
+    }
+    .login-right-title {
+        font-size: 1.5rem; font-weight: 700; color: #003A70;
+        margin-bottom: 0.3rem;
+    }
+    .login-right-sub {
+        font-size: 0.8rem; color: #8a9ab0; margin-bottom: 2rem;
+    }
+    .demo-box {
+        margin-top: 1.5rem; background: #f4f8fc;
+        border-radius: 8px; padding: 0.8rem 1rem;
+        font-size: 0.72rem; color: #7a8a9a; line-height: 1.8;
+        border-left: 3px solid #0066B3;
+    }
+    </style>
 
-    col1, col2, col3 = st.columns([1,2,1])
-    with col2:
-        st.markdown("""
-        <div style='text-align:center;margin-bottom:2rem'>
-          <div style='font-size:2.5rem;margin-bottom:0.5rem'>🏥</div>
-          <div style='font-size:1.3rem;font-weight:600;color:#0D2B55'>AgentVoix Admin</div>
-          <div style='font-size:0.78rem;color:#8a9ab0;margin-top:4px'>
-            CIUSSS de l'Est-de-l'Île-de-Montréal<br>Hôpital Maisonneuve-Rosemont
+    <div class="login-page">
+      <div class="login-wrapper">
+
+        <!-- Côté gauche : identité CIUSSS -->
+        <div class="login-left">
+          <div>
+            <!-- Logo CIUSSS SVG -->
+            <svg width="80" height="80" viewBox="0 0 120 120" style="margin-bottom:1.2rem">
+              <circle cx="60" cy="60" r="58" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+              <!-- Arcs colorés CIUSSS -->
+              <path d="M60 15 A45 45 0 0 1 95 38" fill="none" stroke="#00C4B4" stroke-width="10" stroke-linecap="round"/>
+              <path d="M98 45 A45 45 0 0 1 90 92" fill="none" stroke="#F7941D" stroke-width="10" stroke-linecap="round"/>
+              <path d="M83 99 A45 45 0 0 1 37 99" fill="none" stroke="#8DC63F" stroke-width="10" stroke-linecap="round"/>
+              <path d="M28 92 A45 45 0 0 1 20 45" fill="none" stroke="#00A1DE" stroke-width="10" stroke-linecap="round"/>
+              <path d="M23 38 A45 45 0 0 1 58 15" fill="none" stroke="#EC1C24" stroke-width="10" stroke-linecap="round"/>
+              <!-- Point central -->
+              <circle cx="60" cy="60" r="8" fill="white" opacity="0.9"/>
+            </svg>
+            <div class="ciusss-logo-text">CIUSSS de l'Est-de-<br>l'Île-de-Montréal</div>
+            <div class="ciusss-sub">Direction des services techniques<br>Hôpital Maisonneuve-Rosemont</div>
+          </div>
+
+          <div>
+            <div style="font-size:1.8rem;font-weight:700;color:white;margin-bottom:0.5rem">
+              AgentVoix
+            </div>
+            <div style="font-size:0.82rem;color:rgba(255,255,255,0.8);line-height:1.6">
+              Système intelligent de gestion<br>des appels de service technique
+            </div>
+            <div class="login-tagline">
+              ✦ Disponible 24h/7j<br>
+              ✦ Conformité Loi 25<br>
+              ✦ Intégration GMAO Intéral<br>
+              ✦ Classification IA automatique
+            </div>
           </div>
         </div>
-        """, unsafe_allow_html=True)
 
+        <!-- Côté droit : formulaire -->
+        <div class="login-right">
+          <div class="login-right-title">Connexion</div>
+          <div class="login-right-sub">Plateforme d'administration AgentVoix — HMR</div>
+        </div>
+
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Formulaire Streamlit centré
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
         with st.form("login_form"):
             user = st.text_input("Identifiant", placeholder="admin / coord / tech")
             mdp  = st.text_input("Mot de passe", type="password", placeholder="••••••••")
-            submitted = st.form_submit_button("Se connecter", use_container_width=True, type="primary")
+            submitted = st.form_submit_button(
+                "🔐  Se connecter",
+                use_container_width=True,
+                type="primary"
+            )
 
         if submitted:
             users = charger_json(FICHIER_USERS, USERS_DEFAUT)
@@ -387,14 +494,14 @@ def page_login():
                 st.session_state.nom       = users[user]["nom"]
                 st.rerun()
             else:
-                st.error("Identifiant ou mot de passe incorrect.")
+                st.error("❌ Identifiant ou mot de passe incorrect.")
 
         st.markdown("""
-        <div style='margin-top:1.5rem;background:#f4f8fc;border-radius:8px;padding:0.8rem;font-size:0.72rem;color:#7a8a9a'>
+        <div class="demo-box">
         <b>Comptes de démonstration :</b><br>
-        admin / admin2026 → Administrateur complet<br>
+        admin &nbsp;/ admin2026 &nbsp;→ Administrateur<br>
         coord / coord2026 → Coordonnateur<br>
-        tech / tech2026   → Technicien
+        tech &nbsp;&nbsp;/ tech2026 &nbsp;&nbsp;→ Technicien
         </div>
         """, unsafe_allow_html=True)
 
@@ -1200,6 +1307,294 @@ def page_configuration():
 # ════════════════════════════════════════════════════════════════
 # PAGE UTILISATEURS
 # ════════════════════════════════════════════════════════════════
+
+# ════════════════════════════════════════════════════════════════
+# PAGE ELEVENLABS
+# ════════════════════════════════════════════════════════════════
+def page_elevenlabs():
+    st.markdown('<div class="section-title">🎙️ ElevenLabs — Agent vocal IA</div>', unsafe_allow_html=True)
+    config = charger_json(FICHIER_CONFIG, {})
+
+    tab1, tab2, tab3 = st.tabs(["🔑 Configuration", "🧪 Test agent", "📊 Monitoring conversations"])
+
+    # ── TAB 1 : Configuration ──────────────────────────────────
+    with tab1:
+        st.markdown("**Connexion ElevenLabs**")
+        c1, c2 = st.columns(2)
+        with c1:
+            el_key = st.text_input(
+                "Clé API ElevenLabs",
+                value=config.get("elevenlabs_key",""),
+                type="password",
+                placeholder="sk_xxxxxxxxxxxxxxxxxxxxxxxx",
+                help="Paramètres → API Keys dans ElevenLabs"
+            )
+            el_agent_id = st.text_input(
+                "Agent ID",
+                value=config.get("elevenlabs_agent_id",""),
+                placeholder="agent_xxxxxxxxxxxxxxxx",
+                help="Agents → ton agent HMR → ID"
+            )
+        with c2:
+            el_voice_id = st.text_input(
+                "Voice ID (optionnel)",
+                value=config.get("elevenlabs_voice_id",""),
+                placeholder="Voice ID ElevenLabs",
+                help="Voix → ID de la voix française choisie"
+            )
+            el_webhook = st.text_input(
+                "URL Webhook n8n",
+                value=config.get("elevenlabs_webhook",""),
+                placeholder="https://votre-n8n.com/webhook/agentvoix-hmr",
+                help="URL du webhook n8n qui reçoit les données après chaque appel"
+            )
+
+        st.markdown("---")
+        st.markdown("**Prompt système de l'agent HMR**")
+        prompt_defaut = """Tu es l'agent IA de réception des appels de service technique de l'Hôpital Maisonneuve-Rosemont, CIUSSS de l'Est-de-l'Île-de-Montréal.
+
+INTRODUCTION OBLIGATOIRE (Loi 25) :
+"Bonjour ! Service de maintenance des bâtiments de l'Hôpital Maisonneuve-Rosemont. Je suis l'agent IA. Cet appel est traité par une intelligence artificielle et sera enregistré aux fins de traitement de votre demande uniquement, conformément à la Loi 25. Dites 'humain' en tout temps pour parler à une personne."
+
+QUESTIONS À POSER UNE PAR UNE (attendre la réponse avant de continuer) :
+1. Quel est votre prénom et nom ?
+2. Votre numéro de téléphone ou extension ?
+3. Votre numéro d'employé ? (ex: HMR-8301)
+4. Cette demande est pour vous-même ou une autre personne ?
+5. Dans quel pavillon se trouve le problème ? (Maisonneuve, Lavoisier, Guy-Bernier, Rachel-Tourigny)
+6. À quel étage ?
+7. Dans quelle aile ? (dites 'je ne sais pas' si inconnu)
+8. Quel est le numéro du local ou de la salle ?
+9. Précisez la localisation exacte. (optionnel)
+10. En quelques mots, quel est le problème ?
+11. Décrivez le problème en détail.
+
+RÈGLES IMPORTANTES :
+- Si la personne dit 'je ne sais pas', 'inconnu', 'pas certain' → inscrire NAN et passer à la question suivante
+- Si tu détectes les mots urgence, feu, incendie, danger, blessé → dire immédiatement "Je vous transfère d'urgence vers la permanence" et terminer l'appel
+- Ne jamais sauter une question
+- Parler en français québécois naturel
+- À la fin : confirmer le numéro de bon de travail généré
+
+CONCLUSION :
+"Merci [nom]. Votre demande est enregistrée. L'équipe technique va intervenir. Bonne journée !" """
+
+        prompt = st.text_area(
+            "Script de l'agent",
+            value=config.get("elevenlabs_prompt", prompt_defaut),
+            height=350,
+            help="Ce prompt définit le comportement de l'agent lors des appels"
+        )
+
+        st.markdown("---")
+        st.markdown("**Configuration webhook — Structure JSON envoyée à n8n**")
+        st.code("""{
+  "event": "conversation_completed",
+  "conversation_id": "conv_xxx",
+  "agent_id": "agent_xxx",
+  "data": {
+    "demande_par":     "Marie Tremblay",
+    "telephone":       "4381234567",
+    "no_employe":      "HMR-8301",
+    "demande_pour":    "Marie Tremblay",
+    "pavillon":        "Maisonneuve",
+    "etage":           "5",
+    "aile":            "A",
+    "local":           "MA05102",
+    "localisation":    "Bureau infirmières",
+    "remarque_courte": "Lumière brisée",
+    "remarques":       "Les tubes fluorescents sont grillés",
+    "urgence":         false,
+    "duree_appel":     180
+  }
+}""", language="json")
+
+        if st.button("💾 Sauvegarder configuration ElevenLabs", type="primary"):
+            config.update({
+                "elevenlabs_key":      el_key,
+                "elevenlabs_agent_id": el_agent_id,
+                "elevenlabs_voice_id": el_voice_id,
+                "elevenlabs_webhook":  el_webhook,
+                "elevenlabs_prompt":   prompt,
+            })
+            sauvegarder_json(FICHIER_CONFIG, config)
+            st.success("✅ Configuration ElevenLabs sauvegardée !")
+
+    # ── TAB 2 : Test agent ──────────────────────────────────────
+    with tab2:
+        st.markdown("**Tester la connexion ElevenLabs**")
+        key = config.get("elevenlabs_key","")
+        agent_id = config.get("elevenlabs_agent_id","")
+
+        if not key:
+            st.warning("⚠️ Configure d'abord ta clé API dans l'onglet Configuration.")
+        else:
+            c1, c2, c3 = st.columns(3)
+            with c1:
+                if st.button("🔗 Tester connexion API", use_container_width=True):
+                    try:
+                        import urllib.request, json as _json
+                        req = urllib.request.Request(
+                            "https://api.elevenlabs.io/v1/user",
+                            headers={"xi-api-key": key},
+                            method="GET"
+                        )
+                        with urllib.request.urlopen(req, timeout=10) as r:
+                            data = _json.loads(r.read())
+                            st.success(f"✅ Connexion OK — Compte : {data.get('first_name','')} {data.get('last_name','')}")
+                            st.info(f"Caractères restants : {data.get('subscription',{}).get('character_limit',0) - data.get('subscription',{}).get('character_count',0):,}")
+                    except Exception as e:
+                        st.error(f"❌ Erreur : {e}")
+            with c2:
+                if st.button("🎙️ Lister les voix FR", use_container_width=True):
+                    try:
+                        import urllib.request, json as _json
+                        req = urllib.request.Request(
+                            "https://api.elevenlabs.io/v1/voices",
+                            headers={"xi-api-key": key},
+                            method="GET"
+                        )
+                        with urllib.request.urlopen(req, timeout=10) as r:
+                            data = _json.loads(r.read())
+                            voix_fr = [v for v in data.get("voices",[])
+                                       if "french" in str(v.get("labels",{})).lower()
+                                       or "fr" in str(v.get("labels",{})).lower()]
+                            if voix_fr:
+                                for v in voix_fr[:5]:
+                                    st.markdown(f"**{v['name']}** — `{v['voice_id']}`")
+                            else:
+                                st.info("Aucune voix française trouvée. Toutes les voix disponibles :")
+                                for v in data.get("voices",[])[:5]:
+                                    st.markdown(f"**{v['name']}** — `{v['voice_id']}`")
+                    except Exception as e:
+                        st.error(f"❌ Erreur : {e}")
+            with c3:
+                if st.button("🤖 Vérifier agent", use_container_width=True):
+                    if not agent_id:
+                        st.error("Agent ID non configuré.")
+                    else:
+                        try:
+                            import urllib.request, json as _json
+                            req = urllib.request.Request(
+                                f"https://api.elevenlabs.io/v1/convai/agents/{agent_id}",
+                                headers={"xi-api-key": key},
+                                method="GET"
+                            )
+                            with urllib.request.urlopen(req, timeout=10) as r:
+                                data = _json.loads(r.read())
+                                st.success(f"✅ Agent trouvé : **{data.get('name','—')}**")
+                                st.json({
+                                    "name": data.get("name"),
+                                    "language": data.get("conversation_config",{}).get("agent",{}).get("language","—"),
+                                    "status": "Actif"
+                                })
+                        except Exception as e:
+                            st.error(f"❌ Erreur : {e}")
+
+        st.markdown("---")
+        st.markdown("**Générer un audio de test**")
+        texte_test = st.text_input(
+            "Texte à synthétiser",
+            value="Bonjour, je suis l'agent IA de l'Hôpital Maisonneuve-Rosemont. Comment puis-je vous aider ?",
+        )
+        voice_id_test = config.get("elevenlabs_voice_id","") or "21m00Tcm4TlvDq8ikWAM"
+
+        if st.button("🔊 Générer audio test", use_container_width=True):
+            if not key:
+                st.error("Clé API requise.")
+            else:
+                try:
+                    import urllib.request, json as _json
+                    body = _json.dumps({
+                        "text": texte_test,
+                        "model_id": "eleven_multilingual_v2",
+                        "voice_settings": {"stability": 0.5, "similarity_boost": 0.75}
+                    }).encode()
+                    req = urllib.request.Request(
+                        f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id_test}",
+                        data=body,
+                        headers={
+                            "xi-api-key": key,
+                            "Content-Type": "application/json",
+                            "Accept": "audio/mpeg"
+                        },
+                        method="POST"
+                    )
+                    with urllib.request.urlopen(req, timeout=15) as r:
+                        audio = r.read()
+                        st.audio(audio, format="audio/mp3")
+                        st.success("✅ Audio généré avec succès !")
+                except Exception as e:
+                    st.error(f"❌ Erreur génération audio : {e}")
+
+    # ── TAB 3 : Monitoring ─────────────────────────────────────
+    with tab3:
+        st.markdown("**Conversations récentes — Agent HMR**")
+        key = config.get("elevenlabs_key","")
+        agent_id = config.get("elevenlabs_agent_id","")
+
+        if not key or not agent_id:
+            st.warning("⚠️ Configure la clé API et l'Agent ID dans l'onglet Configuration.")
+        else:
+            col_refresh, _ = st.columns([2,6])
+            with col_refresh:
+                if st.button("🔄 Charger conversations", use_container_width=True):
+                    try:
+                        import urllib.request, json as _json
+                        req = urllib.request.Request(
+                            f"https://api.elevenlabs.io/v1/convai/conversations?agent_id={agent_id}&page_size=20",
+                            headers={"xi-api-key": key},
+                            method="GET"
+                        )
+                        with urllib.request.urlopen(req, timeout=10) as r:
+                            data = _json.loads(r.read())
+                            conversations = data.get("conversations", [])
+                            st.session_state["el_conversations"] = conversations
+                    except Exception as e:
+                        st.error(f"❌ Erreur : {e}")
+
+            convs = st.session_state.get("el_conversations", [])
+            if not convs:
+                st.info("Clique sur 'Charger conversations' pour voir les appels récents.")
+            else:
+                st.markdown(f"**{len(convs)} conversation(s) chargée(s)**")
+                for conv in convs:
+                    status = conv.get("status","—")
+                    duree  = conv.get("metadata",{}).get("duration_secs",0)
+                    conv_id = conv.get("conversation_id","—")
+                    date_ts = conv.get("metadata",{}).get("start_time_unix_secs",0)
+                    date_str = datetime.fromtimestamp(date_ts).strftime("%Y-%m-%d %H:%M") if date_ts else "—"
+
+                    couleur = "#2E7D32" if status == "done" else "#E65100"
+                    icone   = "✅" if status == "done" else "🔄"
+
+                    st.markdown(f"""
+                    <div class="req">
+                      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                        <span class="req-no">{conv_id[:20]}...</span>
+                        <span class="badge" style="background:{'#e8f5e9' if status=='done' else '#fff3e0'};
+                          color:{couleur}">{icone} {status}</span>
+                        <span style="font-size:0.78rem;color:#6B7A8D">⏱ {duree}s</span>
+                        <span style="margin-left:auto;font-size:0.72rem;color:#aaa">{date_str}</span>
+                      </div>
+                    </div>""", unsafe_allow_html=True)
+
+                # Stats rapides
+                st.markdown("---")
+                st.markdown("**Statistiques**")
+                total_conv = len(convs)
+                terminees  = sum(1 for c in convs if c.get("status") == "done")
+                duree_moy  = sum(c.get("metadata",{}).get("duration_secs",0) for c in convs) / max(total_conv,1)
+
+                c1,c2,c3 = st.columns(3)
+                with c1:
+                    st.markdown(f'<div class="kpi"><div class="kpi-n" style="color:#003A70">{total_conv}</div><div class="kpi-l">Conversations</div></div>', unsafe_allow_html=True)
+                with c2:
+                    st.markdown(f'<div class="kpi"><div class="kpi-n" style="color:#2E7D32">{terminees}</div><div class="kpi-l">Complétées</div></div>', unsafe_allow_html=True)
+                with c3:
+                    st.markdown(f'<div class="kpi"><div class="kpi-n" style="color:#00A1DE">{duree_moy:.0f}s</div><div class="kpi-l">Durée moyenne</div></div>', unsafe_allow_html=True)
+
+
 def page_utilisateurs():
     st.markdown('<div class="section-title">👥 Utilisateurs — Gestion des accès</div>', unsafe_allow_html=True)
     users = charger_json(FICHIER_USERS, USERS_DEFAUT)
@@ -1301,6 +1696,7 @@ def main():
     elif "Agent IA"      in page: page_agent_ia()
     elif "Workflow"      in page: page_workflow()
     elif "Configuration" in page: page_configuration()
+    elif "ElevenLabs"    in page: page_elevenlabs()
     elif "Utilisateurs"  in page: page_utilisateurs()
 
 if __name__ == "__main__":
